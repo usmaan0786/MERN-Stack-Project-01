@@ -1,4 +1,4 @@
-import express, { json } from "express";
+import express from "express";
 import "../db/conn.js";
 import User from "../model/userSchema.js";
 import bcrypt from "bcrypt";
@@ -10,17 +10,8 @@ app.use(express.json());
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("Welcome to home page from router");
-});
-
-router.get("/about", (req, res) => {
-  res.send("About page from router");
-});
-
-router.get("/signin", (req, res) => {
-  res.cookie("MyCookie", "cotent : usman");
-  res.send("Hello from Sign In page");
+router.get("/about", authenticate, (req, res) => {
+  res.send(req.rootUser);
 });
 
 router.post("/register", async (req, res) => {
@@ -72,25 +63,25 @@ router.post("/signin", async (req, res) => {
         userExist.password
       );
 
+      if (!isPasswordMatch) {
+        return res
+          .status(422)
+          .json({ error: "Password is incorrect" });
+      }
+
       const token = await userExist.generateAuthToken();
 
       res.cookie("jwtToken", token, {
-        expires : new Date(Date.now() + 10000000), // write in milisecond
-        httpOnly : true // so that they store on http
+        expires: new Date(Date.now() + 3600000), // Cookie will expire in 1 hour (3600000 milliseconds)
+        httpOnly: true,
       });
-      
-
 
       if (isPasswordMatch) {
-        console.log("Login Successful");
-
         return res.status(200).json({ message: "Login Successful", token });
       } else {
-        console.log("Invalid password");
         return res.status(401).json({ message: "Invalid password" });
       }
     } else {
-      console.log("User not found");
       return res.status(404).json({ message: "User not found" });
     }
   } catch (error) {

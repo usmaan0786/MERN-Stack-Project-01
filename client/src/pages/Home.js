@@ -1,22 +1,36 @@
-import React, { useEffect } from "react";
-import { } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const [UserData, setUserData] = useState();
+
+  const callAboutPage = useCallback(async () => {
+    try {
+      const response = await fetch("http://localhost:5000/about", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      setUserData(data);
+
+      if (data.error) {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [navigate]);
 
   useEffect(() => {
-    const fetchToken = () => {
-      try {
-        const token = localStorage.getItem("jwtToken");
-        console.log("Home Page token =", token);
-        // Additional logic with the token, if needed
-      } catch (error) {
-        console.error("Error fetching token:", error);
-      }
-    };
-
-    fetchToken();
-  }, []); // Empty dependency array means this effect runs once after the initial render
-
+    callAboutPage();
+  }, [callAboutPage, navigate]);
 
   return (
     <div className="flex">
@@ -24,11 +38,11 @@ const Home = () => {
         <p className="text-[2.5rem] font-bold">
           Hi I am{" "}
           <span className="text-[#924eff] text-[3.5rem] font-extrabold">
-            Usman Manzoor
+          {UserData?.name || ""}
           </span>
         </p>
         <p className="text-[#3292ff] text-[2rem] font-extrabold underline">
-          MERN Stack Developer
+        {UserData?.work || ""}
         </p>
         <p className="font-medium mt-[.5rem] tracking-wide">
           There are many variations of passages of Lorem Ipsum available, but

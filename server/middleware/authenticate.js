@@ -3,11 +3,11 @@ import User from "../model/userSchema.js";
 
 const authenticate = async (req, res, next) => {
   try {
-    const token = req.cookies.jwtoken;
+    const token = req.cookies.jwtToken;
 
     const verfiyToken = jwt.verify(token, process.env.SECRETKEY);
 
-    const rootUser = await User.find({
+    const rootUser = await User.findOne({
       _id: verfiyToken._id,
       "tokens.token": token,
     });
@@ -22,8 +22,10 @@ const authenticate = async (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(401).send("unAuthorized");
-    console.log(error);
+    console.error("Authentication error:", error);
+    res
+      .status(401)
+      .json({ error: "Unauthorized: no token provided or invalid token" });
   }
 };
 

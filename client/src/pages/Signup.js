@@ -51,6 +51,10 @@ const Signup = () => {
     const data = await response.json();
 
     console.log(data);
+    if(data.error){
+      window.alert(data.error)
+      return data.error
+    }
     if (data.status === 422 || !data) {
       window.alert("Invalid Registeration");
     } else {

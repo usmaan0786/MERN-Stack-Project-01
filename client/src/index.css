@@ -10,7 +10,7 @@ text-[363636]
  shadow : c5c5c5 grey
 */
 body{
-    @apply bg-[#ffffff] font-poppins overflow-y-hidden  duration-100;
+    @apply bg-[#ffffff] font-poppins  duration-100;
 }
 
 .navbar-list {

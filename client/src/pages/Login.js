@@ -7,29 +7,38 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const LoginData = async (e) => {
-    e.preventDefault();
-    const response = await fetch("http://localhost:5000/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    });
+    try {
+      e.preventDefault();
+      const response = await fetch("http://localhost:5000/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+        credentials: "include",
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    console.log(data);
-    if (data.status === 422 || !data) {
-      window.alert("Login failed");
-    } else {
-      window.alert("Login Successfull");
-      navigate('/')
+      if (data.error) {
+        return data.error;
+      }
+
+      if (data.status === 422 || !data) {
+        window.alert("Login failed");
+        return data.status({ message: "Plz Enter the Fields Properly" });
+      } else {
+        window.alert("Login Successfull");
+        navigate("/about");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

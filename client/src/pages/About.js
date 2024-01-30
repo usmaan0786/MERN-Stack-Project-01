@@ -1,8 +1,37 @@
-import React, { } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import UserImage from "../Images/kTKo7BB8c.png";
-import { } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const About = () => {
+  const navigate = useNavigate();
+  const [UserData, setUserData] = useState();
+
+  const callAboutPage = useCallback(async () => {
+    try {
+      const response = await fetch("http://localhost:5000/about", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      setUserData(data);
+
+      if (data.error) {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    callAboutPage();
+  }, [callAboutPage, navigate]);
 
   return (
     <div className="shadow-md shadow-[#c5c5c5] flex mx-auto rounded-md flex-col text-[#363636] mt-[5rem] p-[3rem] w-max">
@@ -13,7 +42,7 @@ const About = () => {
         <div className="flex mb-[2rem] items-center justify-arround  w-[100%]">
           <img className="w-[12rem]" src={UserImage} alt="UserImage" />
           <h1 className="text-[#924eff] text-[2.5rem] font-extrabold pl-[5rem]">
-            Usman Manzoor
+          {UserData?.name || ""}
           </h1>
         </div>
         <div className="flex items-center gap-x-[10rem]">
@@ -26,17 +55,19 @@ const About = () => {
           </div>
           <div className="flex text-[1.2rem] gap-x-[10rem] flex-col gap-y-[2rem]">
             <p className="border-b-[.1rem] border-[#3292ff] px-[2rem]">
-              0249247892147
-            </p>
-            <p className="border-b-[.1rem] border-[#3292ff] px-[2rem]">Usman</p>
-            <p className="border-b-[.1rem] border-[#3292ff] px-[2rem]">
-              usmanmanzoor1000@gmail.com
+              {UserData?._id || ""}
             </p>
             <p className="border-b-[.1rem] border-[#3292ff] px-[2rem]">
-              03369589172
+              {UserData?.name || ""}
             </p>
             <p className="border-b-[.1rem] border-[#3292ff] px-[2rem]">
-              MERN Stack Developer
+            {UserData?.email || ""}
+            </p>
+            <p className="border-b-[.1rem] border-[#3292ff] px-[2rem]">
+              +{UserData?.phone || ""}
+            </p>
+            <p className="border-b-[.1rem] border-[#3292ff] px-[2rem]">
+            {UserData?.work || ""}
             </p>
           </div>
         </div>
