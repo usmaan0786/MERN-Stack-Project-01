@@ -2,6 +2,7 @@ import express, { json } from "express";
 import "../db/conn.js";
 import User from "../model/userSchema.js";
 import bcrypt from "bcrypt";
+import authenticate from "../middleware/authenticate.js";
 
 const app = express();
 
@@ -11,6 +12,15 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
   res.send("Welcome to home page from router");
+});
+
+router.get("/about", (req, res) => {
+  res.send("About page from router");
+});
+
+router.get("/signin", (req, res) => {
+  res.cookie("MyCookie", "cotent : usman");
+  res.send("Hello from Sign In page");
 });
 
 router.post("/register", async (req, res) => {
@@ -61,9 +71,20 @@ router.post("/signin", async (req, res) => {
         password,
         userExist.password
       );
+
+      const token = await userExist.generateAuthToken();
+
+      res.cookie("jwtToken", token, {
+        expires : new Date(Date.now() + 10000000), // write in milisecond
+        httpOnly : true // so that they store on http
+      });
+      
+
+
       if (isPasswordMatch) {
         console.log("Login Successful");
-        return res.status(200).json({ message: "Login Successful" });
+
+        return res.status(200).json({ message: "Login Successful", token });
       } else {
         console.log("Invalid password");
         return res.status(401).json({ message: "Invalid password" });
