@@ -53,10 +53,7 @@ In this project, I've leveraged the power of the MERN stack, incorporating Mongo
 - Utilized FetchAPI for efficient data retrieval
 - Dynamic data rendering after user authentication
 ### 🛣️ Routing:
-
-Implemented routing for seamless navigation within the application
-🔗 Check out the live demo:
-[Include a link to your project or demo, if available.]
+- Implemented routing for seamless navigation within the application
 
 
 #MERNstack #WebDevelopment #ReactJS #NodeJS #MongoDB #Authentication #JWT #RESTAPI
