@@ -11,7 +11,7 @@
 
 🚀 Exciting News: Just wrapped up my latest project, and I'm thrilled to share the highlights with you! 🌐💻
 
-### 🔗 Project Title: [Dynamic AuthPortal]
+### 🔗 Project Title: Dynamic AuthPortal
 
 ### 📌 Tech Stack:
 
